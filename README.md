@@ -1,60 +1,46 @@
+# BankSphere
 
-# 🏦 BankSphere  
+A personal banking application project built around **Java, Spring Boot, MySQL, and Apache Kafka**, with a React interface and JWT authentication.
 
-A **microservices-based banking platform** built with **Spring Boot, MySQL, Apache Kafka, React, and JWT authentication**, enabling secure customer and admin operations with real-time notifications.  
+This repository is the **project overview and architecture guide**. The backend implementation lives in the three service repositories linked below.
 
----
+## Explore the source
 
-## 🚀 Features
-- **Microservices Architecture**
-  - **Customer Service** – Customer onboarding, deposits, withdrawals, fund transfers, and PDF statement generation.  
-  - **Admin Service** – Manage customers, monitor transactions, and perform administrative operations.  
-  - **Notification Service** – Kafka consumer for sending real-time transaction notifications.  
+| Service | Responsibility | Repository |
+| --- | --- | --- |
+| Customer | Customer onboarding, deposits, withdrawals, transfers, and PDF transaction statements | [customer_service](https://github.com/Narasimha9271/customer_service) |
+| Admin | Customer management and transaction administration | [admin_service](https://github.com/Narasimha9271/admin_service) |
+| Notification | Consume transaction events from Kafka and handle notifications | [notification_service](https://github.com/Narasimha9271/notification_service) |
 
-- **Unified Frontend (React + JWT)**
-  - Secure login for both customers and admins.  
-  - Role-based dashboards.  
-  - Banking operations (deposits, withdrawals, transfers).  
-  - Downloadable **PDF transaction statements**.  
+For a backend review, start with the customer service, then follow the event flow into the notification service.
 
-- **Event-Driven Communication**
-  - **Apache Kafka** used for publishing transaction events.  
-  - Notification service consumes events for real-time updates.  
+## Features
 
----
+- Customer and admin login with JWT authentication and role-based dashboards.
+- Deposits, withdrawals, fund transfers, and transaction history.
+- Downloadable PDF transaction statements using iTextPDF.
+- Kafka-based event communication between banking operations and notifications.
+- React and Tailwind CSS interface for customer and administrative workflows.
 
-## 🛠️ Tech Stack
-- **Backend:** Spring Boot (Customer, Admin, Notification services)  
-- **Database:** MySQL  
-- **Messaging:** Apache Kafka  
-- **Frontend:** React.js, Tailwind CSS  
-- **Authentication:** JWT (JSON Web Tokens)  
-- **PDF Generation:** iTextPDF  
+## Architecture overview
 
----
-
-## 📂 Microservices Repositories
-- [Customer Service](https://github.com/Narasimha9271/customer_service)  
-- [Admin Service](https://github.com/Narasimha9271/admin_service)  
-- [Notification Service](https://github.com/Narasimha9271/notification_service)  
-
----
-
-## 🏗️ Architecture
 ```mermaid
-flowchart TD
-    subgraph Frontend [React Frontend]
-        A[Customer/Admin Dashboard]
-    end
+flowchart LR
+    UI[React frontend] -->|JWT-authenticated requests| Customer[Customer service]
+    UI -->|JWT-authenticated requests| Admin[Admin service]
+    Customer --> DB[(MySQL)]
+    Admin --> DB
+    Customer -->|Transaction events| Kafka[Apache Kafka]
+    Admin -->|Transaction events| Kafka
+    Kafka --> Notification[Notification service]
+```
 
-    subgraph Backend [Spring Boot Microservices]
-        B[Customer Service] --> D[(MySQL Database)]
-        C[Admin Service] --> D
-        B -->|Publishes Events| E[Kafka Broker]
-        C -->|Publishes Events| E
-        E --> F[Notification Service]
-    end
+The diagram shows the project's logical components. Consult each service's source and configuration for its endpoints, database connections, and Kafka settings.
 
-    A -->|JWT Auth| B
-    A -->|JWT Auth| C
-    F -->|Sends Notifications| A
+## Technology
+
+**Backend:** Java, Spring Boot · **Persistence:** MySQL · **Messaging:** Apache Kafka · **Authentication:** JWT · **Frontend:** React, Tailwind CSS · **Statements:** iTextPDF
+
+## Working with the project
+
+Cloning this overview repository provides documentation only. Open the service repositories above to inspect or run the backend components; each service needs its own application configuration and access to its required infrastructure. This repository does not currently provide a combined startup script or a hosted demo.
